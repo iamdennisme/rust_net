@@ -1,0 +1,86 @@
+import 'dart:io';
+
+import 'package:path/path.dart' as p;
+
+final class RustNetNativeLibraryResolver {
+  const RustNetNativeLibraryResolver._();
+
+  static const environmentVariable = 'RUST_NET_NATIVE_LIB_PATH';
+
+  static String resolve({String? explicitPath}) {
+    for (final candidate in _configuredCandidates(explicitPath)) {
+      if (File(candidate).existsSync()) {
+        return p.normalize(candidate);
+      }
+    }
+
+    final discoveredPath = _discoverFromWorkspace();
+    if (discoveredPath != null) {
+      return discoveredPath;
+    }
+
+    throw StateError(
+      'Unable to locate the Rust native library. Build '
+      '`native/rust_net_native` and/or set $environmentVariable.',
+    );
+  }
+
+  static Iterable<String> _configuredCandidates(String? explicitPath) sync* {
+    if (explicitPath != null && explicitPath.trim().isNotEmpty) {
+      yield explicitPath.trim();
+    }
+    final environmentPath = Platform.environment[environmentVariable];
+    if (environmentPath != null && environmentPath.trim().isNotEmpty) {
+      yield environmentPath.trim();
+    }
+  }
+
+  static String? _discoverFromWorkspace() {
+    final seeds = <String>{
+      Directory.current.path,
+      p.dirname(Platform.resolvedExecutable),
+    };
+
+    for (final seed in seeds) {
+      var current = p.normalize(seed);
+      while (true) {
+        for (final mode in <String>['debug', 'release']) {
+          final candidate = p.join(
+            current,
+            'native',
+            'rust_net_native',
+            'target',
+            mode,
+            _libraryFileName,
+          );
+          if (File(candidate).existsSync()) {
+            return p.normalize(candidate);
+          }
+        }
+
+        final parent = p.dirname(current);
+        if (parent == current) {
+          break;
+        }
+        current = parent;
+      }
+    }
+    return null;
+  }
+
+  static String get _libraryFileName {
+    if (Platform.isMacOS) {
+      return 'librust_net_native.dylib';
+    }
+    if (Platform.isLinux || Platform.isAndroid) {
+      return 'librust_net_native.so';
+    }
+    if (Platform.isWindows) {
+      return 'rust_net_native.dll';
+    }
+    throw UnsupportedError(
+      'Unsupported platform for Rust native library resolution: '
+      '${Platform.operatingSystem}',
+    );
+  }
+}
