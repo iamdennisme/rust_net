@@ -5,11 +5,11 @@
 Pod::Spec.new do |s|
   s.name             = 'rust_net'
   s.version          = '0.0.1'
-  s.summary          = 'A new Flutter FFI plugin project.'
+  s.summary          = 'A Flutter HTTP SDK backed by a Rust reqwest core.'
   s.description      = <<-DESC
-A new Flutter FFI plugin project.
+A Flutter HTTP SDK backed by a Rust reqwest core.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://github.com/iamdennisme/rust_net'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
 
@@ -19,6 +19,10 @@ A new Flutter FFI plugin project.
   # `../src/*` so that the C sources can be shared among all target platforms.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
+  s.preserve_paths = 'Libraries/**/*'
+  s.resource_bundles = {
+    'rust_net_native' => ['Libraries/librust_net_native.dylib']
+  }
 
   # If your plugin requires a privacy manifest, for example if it collects user
   # data, update the PrivacyInfo.xcprivacy file to describe your plugin's
@@ -28,7 +32,10 @@ A new Flutter FFI plugin project.
 
   s.dependency 'FlutterMacOS'
 
-  s.platform = :osx, '10.11'
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
+  s.platform = :osx, '10.14'
+  s.pod_target_xcconfig = {
+    'DEFINES_MODULE' => 'YES',
+    'MACOSX_DEPLOYMENT_TARGET' => '10.14'
+  }
   s.swift_version = '5.0'
 end

@@ -14,7 +14,9 @@ final class RustNetNativeLibraryResolver {
       }
     }
 
-    final discoveredPath = _discoverFromWorkspace();
+    final discoveredPath = _discoverFromAppBundle() ??
+        _discoverFromPackagedPlugin() ??
+        _discoverFromWorkspace();
     if (discoveredPath != null) {
       return discoveredPath;
     }
@@ -33,6 +35,100 @@ final class RustNetNativeLibraryResolver {
     if (environmentPath != null && environmentPath.trim().isNotEmpty) {
       yield environmentPath.trim();
     }
+  }
+
+  static String? _discoverFromAppBundle() {
+    if (!Platform.isMacOS) {
+      return null;
+    }
+
+    final executableDirectory = p.dirname(Platform.resolvedExecutable);
+    final candidates = <String>[
+      p.join(
+        executableDirectory,
+        '..',
+        'Resources',
+        _resourceBundleName,
+        _libraryFileName,
+      ),
+      p.join(
+        executableDirectory,
+        '..',
+        'Frameworks',
+        'rust_net.framework',
+        'Resources',
+        _resourceBundleName,
+        'Contents',
+        'Resources',
+        _libraryFileName,
+      ),
+      p.join(
+        executableDirectory,
+        '..',
+        'Frameworks',
+        'rust_net.framework',
+        'Versions',
+        'A',
+        'Resources',
+        _resourceBundleName,
+        'Contents',
+        'Resources',
+        _libraryFileName,
+      ),
+      p.join(
+        executableDirectory,
+        '..',
+        'Frameworks',
+        'App.framework',
+        'Resources',
+        _resourceBundleName,
+        _libraryFileName,
+      ),
+      p.join(
+        executableDirectory,
+        '..',
+        'Frameworks',
+        _libraryFileName,
+      ),
+    ];
+
+    for (final candidate in candidates) {
+      if (File(candidate).existsSync()) {
+        return p.normalize(candidate);
+      }
+    }
+
+    return null;
+  }
+
+  static String? _discoverFromPackagedPlugin() {
+    final seeds = <String>{
+      Directory.current.path,
+      p.dirname(Platform.script.toFilePath()),
+      p.dirname(Platform.resolvedExecutable),
+    };
+
+    for (final seed in seeds) {
+      var current = p.normalize(seed);
+      while (true) {
+        final candidate = p.join(
+          current,
+          'macos',
+          'Libraries',
+          _libraryFileName,
+        );
+        if (File(candidate).existsSync()) {
+          return p.normalize(candidate);
+        }
+
+        final parent = p.dirname(current);
+        if (parent == current) {
+          break;
+        }
+        current = parent;
+      }
+    }
+    return null;
   }
 
   static String? _discoverFromWorkspace() {
@@ -67,6 +163,8 @@ final class RustNetNativeLibraryResolver {
     }
     return null;
   }
+
+  static const _resourceBundleName = 'rust_net_native.bundle';
 
   static String get _libraryFileName {
     if (Platform.isMacOS) {

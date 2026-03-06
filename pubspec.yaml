@@ -1,13 +1,17 @@
 name: rust_net
 description: "A standard HTTP SDK for Flutter backed by a Rust reqwest core."
 version: 0.0.1
-homepage: https://example.com/rust_net
+homepage: https://github.com/iamdennisme/rust_net
+
+executables:
+  prepare_macos_native:
 
 environment:
   sdk: ^3.6.2
   flutter: ">=3.3.0"
 
 dependencies:
+  dio: ^5.9.0
   ffi: ^2.1.3
   flutter:
     sdk: flutter
