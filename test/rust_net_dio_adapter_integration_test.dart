@@ -155,17 +155,65 @@ void main() {
       'follows GET redirects through the Rust core',
       () async {
         for (final statusCode in <int>[301, 302, 303, 307, 308]) {
+          final expectedFinalUri = fixtureServer!.uri(
+            '/get',
+            <String, String>{'source': 'redirected_$statusCode'},
+          );
           final response = await dio!.get<Map<String, dynamic>>(
             fixtureServer!.uri(
               '/redirect/$statusCode',
-              <String, String>{
-                'location': '/get?source=redirected_$statusCode',
-              },
+              <String, String>{'location': expectedFinalUri.toString()},
             ).toString(),
           );
 
           expect(response.statusCode, HttpStatus.ok);
           expect(response.data?['query']['source'], 'redirected_$statusCode');
+          expect(
+            response.headers.value(RustNetDioAdapter.finalUriHeaderName),
+            expectedFinalUri.toString(),
+          );
+        }
+      },
+      skip: skipReason,
+    );
+
+    test(
+      'follows POST redirects through the Rust core',
+      () async {
+        const payload = '{"message":"redirect me"}';
+        final expectations = <int, String>{
+          301: 'GET',
+          302: 'GET',
+          303: 'GET',
+          307: 'POST',
+          308: 'POST',
+        };
+
+        for (final entry in expectations.entries) {
+          final expectedFinalUri = fixtureServer!.uri(
+            '/redirect-target',
+            <String, String>{'source': 'redirected_${entry.key}'},
+          );
+          final response = await dio!.post<Map<String, dynamic>>(
+            fixtureServer!.uri(
+              '/redirect/${entry.key}',
+              <String, String>{'location': expectedFinalUri.toString()},
+            ).toString(),
+            data: payload,
+            options: Options(contentType: Headers.jsonContentType),
+          );
+
+          expect(response.statusCode, HttpStatus.ok);
+          expect(response.data?['method'], entry.value);
+          expect(
+            response.headers.value(RustNetDioAdapter.finalUriHeaderName),
+            expectedFinalUri.toString(),
+          );
+          if (entry.value == 'POST') {
+            expect(response.data?['body_text'], payload);
+          } else {
+            expect(response.data?['body_text'], isEmpty);
+          }
         }
       },
       skip: skipReason,

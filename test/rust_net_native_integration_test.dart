@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -182,17 +183,68 @@ void main() {
       () async {
         const redirectStatuses = <int>[301, 302, 303, 307, 308];
         for (final status in redirectStatuses) {
+          final expectedFinalUri = fixtureServer!.uri(
+            '/get',
+            <String, String>{'source': 'redirected_$status'},
+          );
           final response = await client!.execute(
             RustNetRequest.get(
               uri: fixtureServer!.uri(
                 '/redirect/$status',
-                <String, String>{'location': '/get?source=redirected_$status'},
+                <String, String>{'location': expectedFinalUri.toString()},
               ),
             ),
           );
 
           expect(response.statusCode, HttpStatus.ok);
           expect(response.bodyText, contains('"source":"redirected_$status"'));
+          expect(response.finalUri, expectedFinalUri);
+        }
+      },
+      skip: skipReason,
+    );
+
+    test(
+      'follows POST redirects with the reqwest method policy and exposes finalUri',
+      () async {
+        const payload = '{"message":"redirect me"}';
+        final expectations = <int, String>{
+          301: 'GET',
+          302: 'GET',
+          303: 'GET',
+          307: 'POST',
+          308: 'POST',
+        };
+
+        for (final entry in expectations.entries) {
+          final expectedFinalUri = fixtureServer!.uri(
+            '/redirect-target',
+            <String, String>{'source': 'redirected_${entry.key}'},
+          );
+          final response = await client!.execute(
+            RustNetRequest.text(
+              method: RustNetMethod.post,
+              uri: fixtureServer!.uri(
+                '/redirect/${entry.key}',
+                <String, String>{'location': expectedFinalUri.toString()},
+              ),
+              body: payload,
+              headers: const <String, String>{
+                'content-type': 'application/json',
+              },
+            ),
+          );
+
+          expect(response.statusCode, HttpStatus.ok);
+          expect(response.finalUri, expectedFinalUri);
+          final responseJson =
+              jsonDecode(response.bodyText) as Map<String, dynamic>;
+          expect(responseJson['method'], entry.value);
+          if (entry.value == 'POST') {
+            expect(responseJson['body_text'], payload);
+          } else {
+            expect(responseJson['body_text'], isEmpty);
+          }
         }
       },
       skip: skipReason,

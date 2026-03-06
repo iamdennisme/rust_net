@@ -12,6 +12,8 @@ import '../../domain/repositories/http_executor.dart';
 import '../../rust_net_client.dart';
 
 class RustNetDioAdapter implements HttpClientAdapter {
+  static const finalUriHeaderName = 'x-rust-net-final-uri';
+
   RustNetDioAdapter({
     required HttpExecutor executor,
     this.closeExecutor = true,
@@ -62,11 +64,16 @@ class RustNetDioAdapter implements HttpClientAdapter {
         options: options,
         cancelFuture: cancelFuture,
       );
+      final headers = <String, List<String>>{
+        ...response.headers,
+        if (response.finalUri != null)
+          finalUriHeaderName: <String>[response.finalUri.toString()],
+      };
 
       return ResponseBody(
         Stream<Uint8List>.value(Uint8List.fromList(response.bodyBytes)),
         response.statusCode,
-        headers: response.headers,
+        headers: headers,
         isRedirect: _isRedirectStatus(response.statusCode),
       );
     } on DioException {

@@ -17,6 +17,7 @@ void main() {
               'content-type': <String>[Headers.jsonContentType],
             },
             bodyBytes: utf8.encode('{"ok":true}'),
+            finalUri: Uri.parse('https://example.com/v1/ping?source=dio'),
           );
         },
       );
@@ -32,6 +33,10 @@ void main() {
       expect(response.statusCode, 200);
       expect(response.data, <String, dynamic>{'ok': true});
       expect(executor.lastRequest?.method, RustNetMethod.get);
+      expect(
+        response.headers.value(RustNetDioAdapter.finalUriHeaderName),
+        'https://example.com/v1/ping?source=dio',
+      );
       expect(
         executor.lastRequest?.uri,
         Uri.parse('https://example.com/v1/ping?source=dio'),

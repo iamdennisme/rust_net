@@ -9,6 +9,7 @@ class NativeHttpResponseDto with _$NativeHttpResponseDto {
     @JsonKey(name: 'status_code') required int statusCode,
     @Default(<String, List<String>>{}) Map<String, List<String>> headers,
     @JsonKey(name: 'body_base64') required String bodyBase64,
+    @JsonKey(name: 'final_url') String? finalUrl,
   }) = _NativeHttpResponseDto;
 
   factory NativeHttpResponseDto.fromJson(Map<String, dynamic> json) =>

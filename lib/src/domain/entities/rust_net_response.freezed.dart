@@ -19,6 +19,7 @@ mixin _$RustNetResponse {
   int get statusCode => throw _privateConstructorUsedError;
   Map<String, List<String>> get headers => throw _privateConstructorUsedError;
   List<int> get bodyBytes => throw _privateConstructorUsedError;
+  Uri? get finalUri => throw _privateConstructorUsedError;
 
   /// Create a copy of RustNetResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -34,7 +35,10 @@ abstract class $RustNetResponseCopyWith<$Res> {
       _$RustNetResponseCopyWithImpl<$Res, RustNetResponse>;
   @useResult
   $Res call(
-      {int statusCode, Map<String, List<String>> headers, List<int> bodyBytes});
+      {int statusCode,
+      Map<String, List<String>> headers,
+      List<int> bodyBytes,
+      Uri? finalUri});
 }
 
 /// @nodoc
@@ -55,6 +59,7 @@ class _$RustNetResponseCopyWithImpl<$Res, $Val extends RustNetResponse>
     Object? statusCode = null,
     Object? headers = null,
     Object? bodyBytes = null,
+    Object? finalUri = freezed,
   }) {
     return _then(_value.copyWith(
       statusCode: null == statusCode
@@ -69,6 +74,10 @@ class _$RustNetResponseCopyWithImpl<$Res, $Val extends RustNetResponse>
           ? _value.bodyBytes
           : bodyBytes // ignore: cast_nullable_to_non_nullable
               as List<int>,
+      finalUri: freezed == finalUri
+          ? _value.finalUri
+          : finalUri // ignore: cast_nullable_to_non_nullable
+              as Uri?,
     ) as $Val);
   }
 }
@@ -82,7 +91,10 @@ abstract class _$$RustNetResponseImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int statusCode, Map<String, List<String>> headers, List<int> bodyBytes});
+      {int statusCode,
+      Map<String, List<String>> headers,
+      List<int> bodyBytes,
+      Uri? finalUri});
 }
 
 /// @nodoc
@@ -101,6 +113,7 @@ class __$$RustNetResponseImplCopyWithImpl<$Res>
     Object? statusCode = null,
     Object? headers = null,
     Object? bodyBytes = null,
+    Object? finalUri = freezed,
   }) {
     return _then(_$RustNetResponseImpl(
       statusCode: null == statusCode
@@ -115,6 +128,10 @@ class __$$RustNetResponseImplCopyWithImpl<$Res>
           ? _value._bodyBytes
           : bodyBytes // ignore: cast_nullable_to_non_nullable
               as List<int>,
+      finalUri: freezed == finalUri
+          ? _value.finalUri
+          : finalUri // ignore: cast_nullable_to_non_nullable
+              as Uri?,
     ));
   }
 }
@@ -125,7 +142,8 @@ class _$RustNetResponseImpl extends _RustNetResponse {
   const _$RustNetResponseImpl(
       {required this.statusCode,
       final Map<String, List<String>> headers = const <String, List<String>>{},
-      final List<int> bodyBytes = const <int>[]})
+      final List<int> bodyBytes = const <int>[],
+      this.finalUri})
       : _headers = headers,
         _bodyBytes = bodyBytes,
         super._();
@@ -151,8 +169,11 @@ class _$RustNetResponseImpl extends _RustNetResponse {
   }
 
   @override
+  final Uri? finalUri;
+
+  @override
   String toString() {
-    return 'RustNetResponse(statusCode: $statusCode, headers: $headers, bodyBytes: $bodyBytes)';
+    return 'RustNetResponse(statusCode: $statusCode, headers: $headers, bodyBytes: $bodyBytes, finalUri: $finalUri)';
   }
 
   @override
@@ -164,7 +185,9 @@ class _$RustNetResponseImpl extends _RustNetResponse {
                 other.statusCode == statusCode) &&
             const DeepCollectionEquality().equals(other._headers, _headers) &&
             const DeepCollectionEquality()
-                .equals(other._bodyBytes, _bodyBytes));
+                .equals(other._bodyBytes, _bodyBytes) &&
+            (identical(other.finalUri, finalUri) ||
+                other.finalUri == finalUri));
   }
 
   @override
@@ -172,7 +195,8 @@ class _$RustNetResponseImpl extends _RustNetResponse {
       runtimeType,
       statusCode,
       const DeepCollectionEquality().hash(_headers),
-      const DeepCollectionEquality().hash(_bodyBytes));
+      const DeepCollectionEquality().hash(_bodyBytes),
+      finalUri);
 
   /// Create a copy of RustNetResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -188,7 +212,8 @@ abstract class _RustNetResponse extends RustNetResponse {
   const factory _RustNetResponse(
       {required final int statusCode,
       final Map<String, List<String>> headers,
-      final List<int> bodyBytes}) = _$RustNetResponseImpl;
+      final List<int> bodyBytes,
+      final Uri? finalUri}) = _$RustNetResponseImpl;
   const _RustNetResponse._() : super._();
 
   @override
@@ -197,6 +222,8 @@ abstract class _RustNetResponse extends RustNetResponse {
   Map<String, List<String>> get headers;
   @override
   List<int> get bodyBytes;
+  @override
+  Uri? get finalUri;
 
   /// Create a copy of RustNetResponse
   /// with the given fields replaced by the non-null parameter values.

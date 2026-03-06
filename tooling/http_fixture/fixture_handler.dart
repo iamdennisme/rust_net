@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 final class FixtureHandler {
   const FixtureHandler._();
@@ -48,6 +49,21 @@ final class FixtureHandler {
         ..headers.set('x-request-method', method)
         ..add(bodyBytes);
       await response.close();
+      return;
+    }
+
+    if (path == '/redirect-target') {
+      final bodyBytes = await _readBodyBytes(request);
+      _writeJson(
+        request: request,
+        statusCode: HttpStatus.ok,
+        payload: <String, Object?>{
+          'method': method,
+          'path': path,
+          'query': request.uri.queryParameters,
+          'body_text': utf8.decode(bodyBytes, allowMalformed: true),
+        },
+      );
       return;
     }
 
@@ -101,10 +117,11 @@ final class FixtureHandler {
       return;
     }
 
-    if (_isRedirectPath(path) && method == 'GET') {
+    if (_isRedirectPath(path)) {
       final statusCode = int.parse(path.split('/').last);
       final location =
-          request.uri.queryParameters['location'] ?? '/get?source=redirected';
+          request.uri.queryParameters['location'] ??
+          '/redirect-target?source=redirected';
       response
         ..statusCode = statusCode
         ..headers.set(HttpHeaders.locationHeader, location);
@@ -192,11 +209,11 @@ final class FixtureHandler {
     response.close();
   }
 
-  static Future<List<int>> _readBodyBytes(HttpRequest request) async {
-    final bytes = <int>[];
+  static Future<Uint8List> _readBodyBytes(HttpRequest request) async {
+    final bytes = BytesBuilder(copy: false);
     await for (final chunk in request) {
-      bytes.addAll(chunk);
+      bytes.add(chunk);
     }
-    return bytes;
+    return bytes.takeBytes();
   }
 }

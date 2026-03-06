@@ -12,6 +12,7 @@ class RustNetResponse with _$RustNetResponse {
     required int statusCode,
     @Default(<String, List<String>>{}) Map<String, List<String>> headers,
     @Default(<int>[]) List<int> bodyBytes,
+    Uri? finalUri,
   }) = _RustNetResponse;
 
   bool get isSuccessful => statusCode >= 200 && statusCode < 300;

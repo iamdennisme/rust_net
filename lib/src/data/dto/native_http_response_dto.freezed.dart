@@ -26,6 +26,8 @@ mixin _$NativeHttpResponseDto {
   Map<String, List<String>> get headers => throw _privateConstructorUsedError;
   @JsonKey(name: 'body_base64')
   String get bodyBase64 => throw _privateConstructorUsedError;
+  @JsonKey(name: 'final_url')
+  String? get finalUrl => throw _privateConstructorUsedError;
 
   /// Serializes this NativeHttpResponseDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -46,7 +48,8 @@ abstract class $NativeHttpResponseDtoCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'status_code') int statusCode,
       Map<String, List<String>> headers,
-      @JsonKey(name: 'body_base64') String bodyBase64});
+      @JsonKey(name: 'body_base64') String bodyBase64,
+      @JsonKey(name: 'final_url') String? finalUrl});
 }
 
 /// @nodoc
@@ -68,6 +71,7 @@ class _$NativeHttpResponseDtoCopyWithImpl<$Res,
     Object? statusCode = null,
     Object? headers = null,
     Object? bodyBase64 = null,
+    Object? finalUrl = freezed,
   }) {
     return _then(_value.copyWith(
       statusCode: null == statusCode
@@ -82,6 +86,10 @@ class _$NativeHttpResponseDtoCopyWithImpl<$Res,
           ? _value.bodyBase64
           : bodyBase64 // ignore: cast_nullable_to_non_nullable
               as String,
+      finalUrl: freezed == finalUrl
+          ? _value.finalUrl
+          : finalUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -98,7 +106,8 @@ abstract class _$$NativeHttpResponseDtoImplCopyWith<$Res>
   $Res call(
       {@JsonKey(name: 'status_code') int statusCode,
       Map<String, List<String>> headers,
-      @JsonKey(name: 'body_base64') String bodyBase64});
+      @JsonKey(name: 'body_base64') String bodyBase64,
+      @JsonKey(name: 'final_url') String? finalUrl});
 }
 
 /// @nodoc
@@ -118,6 +127,7 @@ class __$$NativeHttpResponseDtoImplCopyWithImpl<$Res>
     Object? statusCode = null,
     Object? headers = null,
     Object? bodyBase64 = null,
+    Object? finalUrl = freezed,
   }) {
     return _then(_$NativeHttpResponseDtoImpl(
       statusCode: null == statusCode
@@ -132,6 +142,10 @@ class __$$NativeHttpResponseDtoImplCopyWithImpl<$Res>
           ? _value.bodyBase64
           : bodyBase64 // ignore: cast_nullable_to_non_nullable
               as String,
+      finalUrl: freezed == finalUrl
+          ? _value.finalUrl
+          : finalUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -142,7 +156,8 @@ class _$NativeHttpResponseDtoImpl implements _NativeHttpResponseDto {
   const _$NativeHttpResponseDtoImpl(
       {@JsonKey(name: 'status_code') required this.statusCode,
       final Map<String, List<String>> headers = const <String, List<String>>{},
-      @JsonKey(name: 'body_base64') required this.bodyBase64})
+      @JsonKey(name: 'body_base64') required this.bodyBase64,
+      @JsonKey(name: 'final_url') this.finalUrl})
       : _headers = headers;
 
   factory _$NativeHttpResponseDtoImpl.fromJson(Map<String, dynamic> json) =>
@@ -163,10 +178,13 @@ class _$NativeHttpResponseDtoImpl implements _NativeHttpResponseDto {
   @override
   @JsonKey(name: 'body_base64')
   final String bodyBase64;
+  @override
+  @JsonKey(name: 'final_url')
+  final String? finalUrl;
 
   @override
   String toString() {
-    return 'NativeHttpResponseDto(statusCode: $statusCode, headers: $headers, bodyBase64: $bodyBase64)';
+    return 'NativeHttpResponseDto(statusCode: $statusCode, headers: $headers, bodyBase64: $bodyBase64, finalUrl: $finalUrl)';
   }
 
   @override
@@ -178,13 +196,15 @@ class _$NativeHttpResponseDtoImpl implements _NativeHttpResponseDto {
                 other.statusCode == statusCode) &&
             const DeepCollectionEquality().equals(other._headers, _headers) &&
             (identical(other.bodyBase64, bodyBase64) ||
-                other.bodyBase64 == bodyBase64));
+                other.bodyBase64 == bodyBase64) &&
+            (identical(other.finalUrl, finalUrl) ||
+                other.finalUrl == finalUrl));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, statusCode,
-      const DeepCollectionEquality().hash(_headers), bodyBase64);
+      const DeepCollectionEquality().hash(_headers), bodyBase64, finalUrl);
 
   /// Create a copy of NativeHttpResponseDto
   /// with the given fields replaced by the non-null parameter values.
@@ -207,7 +227,8 @@ abstract class _NativeHttpResponseDto implements NativeHttpResponseDto {
   const factory _NativeHttpResponseDto(
           {@JsonKey(name: 'status_code') required final int statusCode,
           final Map<String, List<String>> headers,
-          @JsonKey(name: 'body_base64') required final String bodyBase64}) =
+          @JsonKey(name: 'body_base64') required final String bodyBase64,
+          @JsonKey(name: 'final_url') final String? finalUrl}) =
       _$NativeHttpResponseDtoImpl;
 
   factory _NativeHttpResponseDto.fromJson(Map<String, dynamic> json) =
@@ -221,6 +242,9 @@ abstract class _NativeHttpResponseDto implements NativeHttpResponseDto {
   @override
   @JsonKey(name: 'body_base64')
   String get bodyBase64;
+  @override
+  @JsonKey(name: 'final_url')
+  String? get finalUrl;
 
   /// Create a copy of NativeHttpResponseDto
   /// with the given fields replaced by the non-null parameter values.

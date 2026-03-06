@@ -11,6 +11,7 @@ final class NativeHttpResponseMapper {
       statusCode: dto.statusCode,
       headers: dto.headers,
       bodyBytes: base64Decode(dto.bodyBase64),
+      finalUri: dto.finalUrl == null ? null : Uri.tryParse(dto.finalUrl!),
     );
   }
 }

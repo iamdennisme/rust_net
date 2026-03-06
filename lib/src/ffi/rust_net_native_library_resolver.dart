@@ -9,8 +9,9 @@ final class RustNetNativeLibraryResolver {
 
   static String resolve({String? explicitPath}) {
     for (final candidate in _configuredCandidates(explicitPath)) {
-      if (File(candidate).existsSync()) {
-        return p.normalize(candidate);
+      final normalizedCandidate = _normalizeConfiguredCandidate(candidate);
+      if (normalizedCandidate != null) {
+        return normalizedCandidate;
       }
     }
 
@@ -37,7 +38,30 @@ final class RustNetNativeLibraryResolver {
     }
   }
 
+  static String? _normalizeConfiguredCandidate(String candidate) {
+    final trimmed = candidate.trim();
+    if (trimmed.isEmpty) {
+      return null;
+    }
+
+    if (_isPlatformLoadName(trimmed)) {
+      return trimmed;
+    }
+
+    return File(trimmed).existsSync() ? p.normalize(trimmed) : null;
+  }
+
+  static bool _isPlatformLoadName(String candidate) {
+    return !candidate.contains(Platform.pathSeparator) &&
+        !candidate.contains('/') &&
+        !candidate.contains('\\');
+  }
+
   static String? _discoverFromAppBundle() {
+    if (Platform.isIOS) {
+      return 'rust_net_native.framework/rust_net_native';
+    }
+
     if (!Platform.isMacOS) {
       return null;
     }
@@ -102,6 +126,13 @@ final class RustNetNativeLibraryResolver {
   }
 
   static String? _discoverFromPackagedPlugin() {
+    if (Platform.isAndroid) {
+      return 'librust_net_native.so';
+    }
+    if (Platform.isWindows) {
+      return 'rust_net_native.dll';
+    }
+
     final seeds = <String>{
       Directory.current.path,
       p.dirname(Platform.script.toFilePath()),
@@ -132,6 +163,16 @@ final class RustNetNativeLibraryResolver {
   }
 
   static String? _discoverFromWorkspace() {
+    if (Platform.isAndroid) {
+      return 'librust_net_native.so';
+    }
+    if (Platform.isIOS) {
+      return 'rust_net_native.framework/rust_net_native';
+    }
+    if (Platform.isWindows) {
+      return 'rust_net_native.dll';
+    }
+
     final seeds = <String>{
       Directory.current.path,
       p.dirname(Platform.resolvedExecutable),

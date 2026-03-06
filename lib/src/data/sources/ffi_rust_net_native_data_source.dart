@@ -14,8 +14,8 @@ typedef _FfiExecuteArgs = ({String libraryPath, int clientId, String requestJson
 
 class FfiRustNetNativeDataSource implements RustNetNativeDataSource {
   FfiRustNetNativeDataSource({required this.libraryPath})
-      : _dynamicLibrary = DynamicLibrary.open(libraryPath),
-        _bindings = RustNetBindings(DynamicLibrary.open(libraryPath));
+      : _dynamicLibrary = _openDynamicLibrary(libraryPath),
+        _bindings = RustNetBindings(_openDynamicLibrary(libraryPath));
 
   final String libraryPath;
   final DynamicLibrary _dynamicLibrary;
@@ -66,7 +66,7 @@ class FfiRustNetNativeDataSource implements RustNetNativeDataSource {
 }
 
 String _executeNativeRequest(_FfiExecuteArgs args) {
-  final bindings = RustNetBindings(DynamicLibrary.open(args.libraryPath));
+  final bindings = RustNetBindings(_openDynamicLibrary(args.libraryPath));
   final requestPointer = args.requestJson.toNativeUtf8();
   try {
     final responsePointer =
@@ -90,4 +90,8 @@ String _executeNativeRequest(_FfiExecuteArgs args) {
   } finally {
     calloc.free(requestPointer);
   }
+}
+
+DynamicLibrary _openDynamicLibrary(String libraryPath) {
+  return DynamicLibrary.open(libraryPath);
 }

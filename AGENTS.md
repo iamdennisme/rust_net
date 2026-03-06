@@ -3,6 +3,7 @@
 ## Project Structure & Module Organization
 - `lib/` contains the Dart SDK surface and internal layers.
 - `native/rust_net_native/` contains the Rust `reqwest` core exported as a `cdylib`.
+- `android/`, `ios/`, `macos/`, and `windows/` contain Flutter FFI plugin wrappers and packaged native-library locations.
 - `example/` contains the macOS demo application.
 - `scripts/` contains local automation such as the HTTP fixture server.
 - `nginx/` contains optional local proxy configs for higher-level manual testing.
@@ -12,6 +13,7 @@
 
 ## Build, Test, and Development Commands
 - `flutter pub get` installs Dart dependencies.
+- `flutter pub get` in a consuming app resolves the Android/iOS/macOS/Windows FFI plugin metadata from this package.
 - `dart run ffigen --config ffigen.yaml` regenerates FFI bindings from `src/rust_net.h`.
 - `dart run build_runner build --delete-conflicting-outputs` regenerates `freezed` and JSON code.
 - `cargo build --manifest-path native/rust_net_native/Cargo.toml` builds the Rust native library.

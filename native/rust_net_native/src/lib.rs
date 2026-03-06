@@ -47,6 +47,7 @@ struct NativeHttpResponse {
     status_code: u16,
     headers: HashMap<String, Vec<String>>,
     body_base64: String,
+    final_url: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -262,6 +263,7 @@ fn execute_request(
             .push(value_string);
     }
 
+    let final_url = Some(response.url().to_string());
     let body = response
         .bytes()
         .map_err(|error| map_reqwest_error(error, &request.url))?;
@@ -270,6 +272,7 @@ fn execute_request(
         status_code,
         headers,
         body_base64: BASE64_STANDARD.encode(body),
+        final_url,
     })
 }
 
@@ -433,6 +436,7 @@ mod tests {
                 .or_default()
                 .push(value.to_str().unwrap_or_default().to_string());
         }
+        let final_url = Some(response.url().to_string());
         let body = response
             .bytes()
             .map_err(|error| map_reqwest_error(error, &request.url))?;
@@ -441,6 +445,7 @@ mod tests {
             status_code,
             headers,
             body_base64: BASE64_STANDARD.encode(body),
+            final_url,
         })
     }
 }

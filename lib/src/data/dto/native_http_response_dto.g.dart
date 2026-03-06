@@ -16,6 +16,7 @@ _$NativeHttpResponseDtoImpl _$$NativeHttpResponseDtoImplFromJson(
           ) ??
           const <String, List<String>>{},
       bodyBase64: json['body_base64'] as String,
+      finalUrl: json['final_url'] as String?,
     );
 
 Map<String, dynamic> _$$NativeHttpResponseDtoImplToJson(
@@ -24,4 +25,5 @@ Map<String, dynamic> _$$NativeHttpResponseDtoImplToJson(
       'status_code': instance.statusCode,
       'headers': instance.headers,
       'body_base64': instance.bodyBase64,
+      'final_url': instance.finalUrl,
     };

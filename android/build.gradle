@@ -1,0 +1,43 @@
+group = 'me.iamdennis.rust_net'
+version = '1.0'
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath('com.android.tools.build:gradle:8.1.0')
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    namespace = 'me.iamdennis.rust_net'
+    compileSdk = 35
+    ndkVersion = android.ndkVersion
+
+    externalNativeBuild {
+        cmake {
+            path = '../src/CMakeLists.txt'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    defaultConfig {
+        minSdk = 21
+    }
+}
