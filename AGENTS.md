@@ -17,6 +17,7 @@
 - `dart run ffigen --config ffigen.yaml` regenerates FFI bindings from `src/rust_net.h`.
 - `dart run build_runner build --delete-conflicting-outputs` regenerates `freezed` and JSON code.
 - `cargo build --manifest-path native/rust_net_native/Cargo.toml` builds the Rust native library.
+- Android consumer builds compile and package `librust_net_native.so` during Gradle pre-build when Rust + Android NDK are available.
 - `cargo test --manifest-path native/rust_net_native/Cargo.toml` runs Rust unit tests.
 - `dart run scripts/http_fixture_server.dart --port 8080` starts the local HTTP fixture server.
 - `docker compose up -d nginx` starts the optional local Nginx proxy.

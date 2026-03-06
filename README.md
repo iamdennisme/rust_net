@@ -76,6 +76,13 @@ The macOS packaging and runtime resolution path has been verified in local
 development. Android, iOS, and Windows plugin wrappers are included in the
 package, but you should still validate packaging in the consuming app.
 
+For Android builds, the plugin now compiles and packages `librust_net_native.so`
+automatically during Gradle `preDebugBuild` / `preReleaseBuild`. This requires:
+
+- Rust toolchain available from the build environment
+- Android NDK installed
+- Rust Android targets available or installable through `rustup`
+
 ### Consumer App Setup
 
 `pubspec.yaml`:
@@ -92,6 +99,9 @@ Package the macOS native library for local development:
 ```bash
 dart run rust_net:prepare_macos_native --configuration debug
 ```
+
+For Android consumer builds, no extra manual packaging step is required once
+Rust and the Android NDK are available on the build machine.
 
 For sandboxed macOS apps, ensure the Runner entitlements include
 `com.apple.security.network.client`.
@@ -129,6 +139,9 @@ cargo test --manifest-path native/rust_net_native/Cargo.toml
 flutter analyze
 flutter test
 ```
+
+If you need to validate Android packaging end-to-end, run a consumer app build
+and verify the APK contains `lib/*/librust_net_native.so`.
 
 ### Local Fixture Server
 
@@ -221,6 +234,13 @@ final dio = Dio()
 其中 macOS 的打包和运行时解析链路已经在本地验证过；Android、iOS、Windows
 的插件封装目录和元数据已经补齐，但仍建议在消费端项目里完成实际打包验证。
 
+其中 Android 现在会在 Gradle 的 `preDebugBuild` / `preReleaseBuild`
+阶段自动编译并打包 `librust_net_native.so`。前提是构建机具备：
+
+- 可用的 Rust toolchain
+- 已安装的 Android NDK
+- 可通过 `rustup` 使用的 Rust Android targets
+
 ### 消费项目接入
 
 `pubspec.yaml`：
@@ -237,6 +257,8 @@ dependencies:
 ```bash
 dart run rust_net:prepare_macos_native --configuration debug
 ```
+
+Android 消费端构建在具备 Rust 和 Android NDK 的前提下，不需要额外手工复制 `.so`。
 
 如果是 sandboxed macOS 应用，需要确保 Runner entitlement 包含
 `com.apple.security.network.client`。
@@ -274,6 +296,9 @@ cargo test --manifest-path native/rust_net_native/Cargo.toml
 flutter analyze
 flutter test
 ```
+
+如果要验证 Android 打包链路，建议直接构建消费端 APK，并确认其中包含
+`lib/*/librust_net_native.so`。
 
 ### 本地 Fixture 服务
 
