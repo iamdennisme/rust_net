@@ -36,6 +36,4 @@ packages/rust_net_core/pubspec.lock
 build/
 **/native/rust_net_native/target/
 **/native/rust_net_native/Cargo.lock
-**/macos/Libraries/*.dylib
 **/android/.cxx/
-**/android/src/main/jniLibs/

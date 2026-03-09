@@ -47,24 +47,40 @@ Or run them sequentially with one command:
 ./scripts/build_native_all.sh
 ```
 
-## Publish order
+## Prebuilt strategy
 
-1. Publish `rust_net_core`.
-2. Publish `rust_net` (depends on `rust_net_core`).
+This repository commits prebuilt native artifacts directly in source:
 
-## GitHub Actions (Tag Release)
+- Android: `packages/rust_net/android/src/main/jniLibs/*/librust_net_native.so`
+- iOS: `packages/rust_net/ios/Frameworks/*.dylib`
+- macOS: `packages/rust_net/macos/Libraries/librust_net_native.dylib`
+- Linux: `packages/rust_net/linux/Libraries/librust_net_native.so`
+- Windows: `packages/rust_net/windows/Libraries/rust_net_native.dll`
 
-Pushing a tag now triggers `.github/workflows/tag-release.yml`, which will:
+`packages/rust_net/android/build.gradle` now prefers prebuilt `jniLibs` and only
+falls back to Rust compilation when prebuilt files are missing.
 
-1. Build native artifacts for Android, iOS, macOS, Linux, Windows.
-2. Create/update the GitHub Release for that tag and upload artifacts.
-3. Publish `rust_net_core` then `rust_net` to pub.dev.
+To force source rebuild on Android:
 
-Required repository secret:
+```bash
+RUST_NET_ANDROID_FORCE_SOURCE_BUILD=true flutter build apk
+```
 
-- `PUB_DEV_PUBLISH_TOKEN`: pub.dev API token used by CI publish.
+## Update prebuilt binaries
 
-Recommended tag format:
+When native code changes, rebuild locally then commit binaries:
 
-- `vX.Y.Z` and keep package versions in `packages/rust_net_core/pubspec.yaml`
-  and `packages/rust_net/pubspec.yaml` aligned with that tag.
+```bash
+./scripts/build_native_all.sh release
+git add packages/rust_net/android/src/main/jniLibs \
+        packages/rust_net/ios/Frameworks \
+        packages/rust_net/macos/Libraries \
+        packages/rust_net/linux/Libraries \
+        packages/rust_net/windows/Libraries
+```
+
+## rust_net_core integration
+
+`rust_net_core` remains a separate package under `packages/rust_net_core`.
+Consumers can reference both packages from this monorepo using git `path`
+dependencies (as Kino does).

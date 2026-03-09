@@ -45,6 +45,16 @@ def rustAndroidTargets = [
         linker: 'x86_64-linux-android21-clang',
     ],
 ]
+def rustNetAndroidJniLibsDir = new File(projectDir, 'src/main/jniLibs')
+def rustNetForceSourceBuild = (System.getenv('RUST_NET_ANDROID_FORCE_SOURCE_BUILD') ?: 'false')
+    .toString()
+    .toBoolean()
+
+def hasAllPrebuiltAndroidLibraries = {
+    rustAndroidTargets.every { target ->
+        new File(rustNetAndroidJniLibsDir, "${target.abi}/librust_net_native.so").exists()
+    }
+}
 
 android {
     namespace = 'me.iamdennis.rust_net'
@@ -170,9 +180,17 @@ def registerRustAndroidTask = { String buildType, String cargoProfile ->
     def taskName = "prepareRustNetAndroidNative${buildType.capitalize()}"
     tasks.register(taskName) {
         inputs.files(rustSources)
-        outputs.dir(new File(projectDir, 'src/main/jniLibs'))
+        outputs.dir(rustNetAndroidJniLibsDir)
 
         doLast {
+            if (!rustNetForceSourceBuild && hasAllPrebuiltAndroidLibraries()) {
+                logger.lifecycle(
+                    'rust_net: using prebuilt Android jniLibs from ' +
+                    rustNetAndroidJniLibsDir.absolutePath,
+                )
+                return
+            }
+
             def ndkDir = resolveAndroidNdkDir()
             def prebuiltDir = resolveNdkPrebuiltDir(ndkDir)
             def llvmAr = new File(prebuiltDir, 'bin/llvm-ar')
@@ -237,7 +255,7 @@ def registerRustAndroidTask = { String buildType, String cargoProfile ->
 
                 copy {
                     from builtLibrary
-                    into new File(projectDir, "src/main/jniLibs/${target.abi}")
+                    into new File(rustNetAndroidJniLibsDir, target.abi)
                 }
             }
         }
