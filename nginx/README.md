@@ -1,7 +1,7 @@
 # Local Proxy Testing
 
 This directory is optional. The primary local test target is the lightweight
-fixture server in [`scripts/http_fixture_server.dart`](../scripts/http_fixture_server.dart).
+fixture server in [`Fixture server/http_fixture_server.dart`](../Fixture%20server/http_fixture_server.dart).
 
 Use Nginx only when you need proxy-specific behavior such as:
 
@@ -15,7 +15,7 @@ Use Nginx only when you need proxy-specific behavior such as:
 1. Start the fixture server:
 
    ```bash
-   dart run scripts/http_fixture_server.dart --port 8080
+   dart run 'Fixture server/http_fixture_server.dart' --port 8080
    ```
 
 2. Start Nginx through Docker Compose:
