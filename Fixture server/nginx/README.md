@@ -1,7 +1,7 @@
 # Local Proxy Testing
 
 This directory is optional. The primary local test target is the lightweight
-fixture server in [`Fixture server/http_fixture_server.dart`](../Fixture%20server/http_fixture_server.dart).
+fixture server in [`../http_fixture_server.dart`](../http_fixture_server.dart).
 
 Use Nginx only when you need proxy-specific behavior such as:
 
@@ -21,7 +21,7 @@ Use Nginx only when you need proxy-specific behavior such as:
 2. Start Nginx through Docker Compose:
 
    ```bash
-   docker compose up -d nginx
+   docker compose -f 'Fixture server/docker-compose.yml' up -d nginx
    ```
 
 3. Point the example app or SDK test target at `http://127.0.0.1:8081`.
@@ -39,7 +39,7 @@ Use Nginx only when you need proxy-specific behavior such as:
 4. Stop the proxy when done:
 
    ```bash
-   docker compose down
+   docker compose -f 'Fixture server/docker-compose.yml' down
    ```
 
 The bundled config proxies traffic to `host.docker.internal:8080`, so the

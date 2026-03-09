@@ -16,6 +16,15 @@ dart run melos analyze
 dart run melos test
 ```
 
+## Network Test Tooling
+
+All local network test utilities are grouped under `Fixture server/`:
+
+- `Fixture server/http_fixture_server.dart`
+- `Fixture server/proxy_smoke_test.sh`
+- `Fixture server/docker-compose.yml`
+- `Fixture server/nginx/`
+
 To build the native Rust library:
 
 ```bash
