@@ -31,6 +31,22 @@ To build the native Rust library:
 cargo build --manifest-path packages/rust_net/native/rust_net_native/Cargo.toml
 ```
 
+For one-by-one multi-platform builds (release by default):
+
+```bash
+./scripts/build_native_macos.sh
+./scripts/build_native_android.sh
+./scripts/build_native_ios.sh
+./scripts/build_native_linux.sh
+./scripts/build_native_windows.sh
+```
+
+Or run them sequentially with one command:
+
+```bash
+./scripts/build_native_all.sh
+```
+
 ## Publish order
 
 1. Publish `rust_net_core`.
