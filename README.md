@@ -51,3 +51,20 @@ Or run them sequentially with one command:
 
 1. Publish `rust_net_core`.
 2. Publish `rust_net` (depends on `rust_net_core`).
+
+## GitHub Actions (Tag Release)
+
+Pushing a tag now triggers `.github/workflows/tag-release.yml`, which will:
+
+1. Build native artifacts for Android, iOS, macOS, Linux, Windows.
+2. Create/update the GitHub Release for that tag and upload artifacts.
+3. Publish `rust_net_core` then `rust_net` to pub.dev.
+
+Required repository secret:
+
+- `PUB_DEV_PUBLISH_TOKEN`: pub.dev API token used by CI publish.
+
+Recommended tag format:
+
+- `vX.Y.Z` and keep package versions in `packages/rust_net_core/pubspec.yaml`
+  and `packages/rust_net/pubspec.yaml` aligned with that tag.
