@@ -117,7 +117,7 @@ For sandboxed macOS apps, ensure the Runner entitlements include
 - `packages/rust_net/`: Flutter FFI transport package (this package)
 - `packages/rust_net_core/`: pure Dart domain package
 - `packages/rust_net/native/rust_net_native/`: Rust `cdylib` based on `reqwest`
-- `servicetest/`: local fixture server and proxy smoke-test utilities
+- `Fixture server/`: local fixture server and proxy smoke-test utilities
 
 ### Local Development
 
@@ -154,7 +154,7 @@ For monorepo local development, this package lives at
 ### Local Fixture Server
 
 ```bash
-dart run servicetest/http_fixture_server.dart --port 8080
+dart run 'Fixture server/http_fixture_server.dart' --port 8080
 ```
 
 Current fixture coverage includes:
@@ -318,7 +318,7 @@ dart run melos test
 ### 本地 Fixture 服务
 
 ```bash
-dart run servicetest/http_fixture_server.dart --port 8080
+dart run 'Fixture server/http_fixture_server.dart' --port 8080
 ```
 
 当前 fixture 覆盖：
