@@ -9,7 +9,7 @@ From the repository root:
 
 ```bash
 dart run rust_net:prepare_macos_native --configuration debug
-dart run scripts/http_fixture_server.dart --port 8080
+dart run servicetest/http_fixture_server.dart --port 8080
 ```
 
 Then in this app:

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import '../../../tooling/http_fixture/fixture_handler.dart';
+import 'http_fixture/fixture_handler.dart';
 
 Future<void> main(List<String> arguments) async {
   final port = _parsePort(arguments) ?? 8080;
