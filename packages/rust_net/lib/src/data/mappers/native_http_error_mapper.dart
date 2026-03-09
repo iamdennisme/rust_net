@@ -1,4 +1,4 @@
-import '../../domain/exceptions/rust_net_exception.dart';
+import 'package:rust_net_core/rust_net_core.dart';
 import '../dto/native_http_error_dto.dart';
 
 final class NativeHttpErrorMapper {

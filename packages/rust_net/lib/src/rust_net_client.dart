@@ -4,11 +4,8 @@ import 'data/mappers/native_http_request_mapper.dart';
 import 'data/mappers/native_http_response_mapper.dart';
 import 'data/sources/ffi_rust_net_native_data_source.dart';
 import 'data/sources/rust_net_native_data_source.dart';
-import 'domain/entities/rust_net_client_config.dart';
-import 'domain/entities/rust_net_request.dart';
-import 'domain/entities/rust_net_response.dart';
-import 'domain/repositories/http_executor.dart';
 import 'ffi/rust_net_native_library_resolver.dart';
+import 'package:rust_net_core/rust_net_core.dart';
 
 class RustNetClient implements HttpExecutor {
   RustNetClient({

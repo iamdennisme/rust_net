@@ -1,8 +1,7 @@
 import 'dart:convert';
 
-import '../../domain/entities/rust_net_client_config.dart';
-import '../../domain/entities/rust_net_request.dart';
-import '../../domain/exceptions/rust_net_exception.dart';
+import 'package:rust_net_core/rust_net_core.dart';
+
 import '../dto/native_http_request_dto.dart';
 
 final class NativeHttpRequestMapper {

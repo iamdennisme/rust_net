@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import '../../domain/entities/rust_net_response.dart';
+import 'package:rust_net_core/rust_net_core.dart';
+
 import '../dto/native_http_response_dto.dart';
 
 final class NativeHttpResponseMapper {

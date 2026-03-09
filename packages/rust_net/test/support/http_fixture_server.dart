@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import '../../tooling/http_fixture/fixture_handler.dart';
+import '../../../../tooling/http_fixture/fixture_handler.dart';
 
 final class HttpFixtureServer {
   HttpFixtureServer._(this._server);

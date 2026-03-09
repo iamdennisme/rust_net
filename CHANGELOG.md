@@ -1,3 +1,5 @@
-## 0.0.1
+## Unreleased
 
-* TODO: Describe initial release.
+- Converted repository to a multi-package workspace.
+- Split core domain models/contracts into `packages/rust_net_core`.
+- Moved Flutter FFI transport package to `packages/rust_net`.

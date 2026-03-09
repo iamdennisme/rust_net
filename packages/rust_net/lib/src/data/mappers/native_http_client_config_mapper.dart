@@ -1,4 +1,4 @@
-import '../../domain/entities/rust_net_client_config.dart';
+import 'package:rust_net_core/rust_net_core.dart';
 import '../dto/native_http_client_config_dto.dart';
 
 final class NativeHttpClientConfigMapper {
