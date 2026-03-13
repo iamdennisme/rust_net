@@ -16,22 +16,20 @@ dart run melos analyze
 dart run melos test
 ```
 
-## Network Test Tooling
+## Build Native Libraries
 
-All local network test utilities are grouped under `fixture_server/`:
-
-- `fixture_server/http_fixture_server.dart`
-- `fixture_server/proxy_smoke_test.sh`
-- `fixture_server/docker-compose.yml`
-- `fixture_server/nginx/`
-
-To build the native Rust library:
+When Rust native code changes, rebuild binaries and commit updated artifacts:
 
 ```bash
-cargo build --manifest-path packages/rust_net/native/rust_net_native/Cargo.toml
+./scripts/build_native_all.sh release
+git add packages/rust_net/android/src/main/jniLibs \
+        packages/rust_net/ios/Frameworks \
+        packages/rust_net/macos/Libraries \
+        packages/rust_net/linux/Libraries \
+        packages/rust_net/windows/Libraries
 ```
 
-For one-by-one multi-platform builds (release by default):
+You can also build one platform at a time:
 
 ```bash
 ./scripts/build_native_macos.sh
@@ -41,10 +39,67 @@ For one-by-one multi-platform builds (release by default):
 ./scripts/build_native_windows.sh
 ```
 
-Or run them sequentially with one command:
+Android notes:
+
+- The plugin prefers prebuilt `jniLibs` in the repository.
+- It falls back to source build only when any ABI library is missing, or when
+  `RUST_NET_ANDROID_FORCE_SOURCE_BUILD=true` is set.
+- Source fallback requires Rust toolchain + Android NDK on the build machine.
+
+## Use In Flutter
+
+`pubspec.yaml`:
+
+```yaml
+dependencies:
+  dio: ^5.9.0
+  rust_net: ^0.1.0
+  # optional
+  rust_net_core: ^0.1.0
+```
+
+Use as a Dio adapter:
+
+```dart
+import 'package:dio/dio.dart';
+import 'package:rust_net/rust_net_dio.dart';
+
+final dio = Dio()
+  ..httpClientAdapter = RustNetDioAdapter.client(
+    config: RustNetClientConfig(
+      baseUrl: Uri.parse('https://api.example.com/'),
+      timeout: const Duration(seconds: 10),
+    ),
+  );
+```
+
+Use the core client directly:
+
+```dart
+import 'package:rust_net/rust_net.dart';
+
+final client = RustNetClient(
+  config: RustNetClientConfig(baseUrl: Uri.parse('https://api.example.com/')),
+);
+final response = await client.execute(
+  RustNetRequest.get(uri: Uri(path: '/healthz')),
+);
+await client.close();
+```
+
+## Network Test Tooling
+
+All local network test utilities are grouped under `fixture_server/`:
+
+- `fixture_server/http_fixture_server.dart`
+- `fixture_server/proxy_smoke_test.sh`
+- `fixture_server/docker-compose.yml`
+- `fixture_server/nginx/`
+
+To run only Rust crate compile locally:
 
 ```bash
-./scripts/build_native_all.sh
+cargo build --manifest-path packages/rust_net/native/rust_net_native/Cargo.toml
 ```
 
 ## Prebuilt strategy
@@ -64,19 +119,6 @@ To force source rebuild on Android:
 
 ```bash
 RUST_NET_ANDROID_FORCE_SOURCE_BUILD=true flutter build apk
-```
-
-## Update prebuilt binaries
-
-When native code changes, rebuild locally then commit binaries:
-
-```bash
-./scripts/build_native_all.sh release
-git add packages/rust_net/android/src/main/jniLibs \
-        packages/rust_net/ios/Frameworks \
-        packages/rust_net/macos/Libraries \
-        packages/rust_net/linux/Libraries \
-        packages/rust_net/windows/Libraries
 ```
 
 ## rust_net_core integration
