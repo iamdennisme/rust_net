@@ -4,9 +4,27 @@
 
 ## English
 
-Monorepo for the `rust_net` Dart/Flutter packages.
+### Project Overview
 
-### Packages
+`rust_net` is a Flutter HTTP SDK workspace that keeps business-facing APIs in
+Dart while delegating transport execution to a Rust `reqwest` core.
+
+This repository is designed for:
+
+- shared domain contracts (`rust_net_core`)
+- Flutter FFI transport implementation (`rust_net`)
+- native Rust transport runtime and multi-platform packaging
+- local fixture/proxy tools for integration testing
+
+### Repository Contents
+
+- `packages/rust_net_core`: domain entities, exceptions, and repository contracts
+- `packages/rust_net`: Flutter package, FFI bridge, and Dio adapter
+- `packages/rust_net/native/rust_net_native`: Rust `cdylib` based on `reqwest`
+- `fixture_server/`: local HTTP fixture server and proxy smoke-test tooling
+- `scripts/`: multi-platform native build scripts
+
+### Package Details
 
 - `packages/rust_net_core`: Pure Dart domain contracts and models (`RustNetRequest`, `RustNetResponse`, `RustNetException`, `HttpExecutor`, etc.).
 - `packages/rust_net`: Flutter FFI transport implementation backed by Rust `reqwest`, plus `Dio` adapter integration.
@@ -129,9 +147,27 @@ RUST_NET_ANDROID_FORCE_SOURCE_BUILD=true flutter build apk
 
 ## 中文
 
-`rust_net` Dart/Flutter 包的 monorepo 工作区。
+### 项目介绍
 
-### 包结构
+`rust_net` 是一个 Flutter HTTP SDK 工作区：对业务开放的 API 保持在 Dart
+层，底层传输执行交给 Rust `reqwest` 内核。
+
+这个仓库主要用于：
+
+- 维护统一的领域契约（`rust_net_core`）
+- 实现 Flutter FFI 传输层（`rust_net`）
+- 管理 Rust 原生运行时与多平台打包
+- 提供本地 fixture/proxy 集成测试工具
+
+### 仓库内容
+
+- `packages/rust_net_core`：领域实体、异常定义、仓储接口契约
+- `packages/rust_net`：Flutter 包、FFI 桥接实现、Dio 适配器
+- `packages/rust_net/native/rust_net_native`：基于 `reqwest` 的 Rust `cdylib`
+- `fixture_server/`：本地 HTTP fixture 服务与代理冒烟测试工具
+- `scripts/`：多平台原生库构建脚本
+
+### 包详情
 
 - `packages/rust_net_core`：纯 Dart 领域契约与模型（`RustNetRequest`、`RustNetResponse`、`RustNetException`、`HttpExecutor` 等）。
 - `packages/rust_net`：基于 Rust `reqwest` 的 Flutter FFI 传输实现，并提供 `Dio` 适配器集成。
